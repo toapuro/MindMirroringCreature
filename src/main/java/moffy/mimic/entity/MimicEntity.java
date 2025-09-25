@@ -20,6 +20,9 @@ import java.util.UUID;
 public class MimicEntity extends FakePlayerWrapperEntity {
 
     private static final EntityDataAccessor<Optional<UUID>> DATA_ATTACHED_PLAYER = SynchedEntityData.defineId(MimicEntity.class, EntityDataSerializers.OPTIONAL_UUID);
+    private static float mimicHP = 444f;
+    private static float beforeHP = 0f;
+    private static float afterHP = 0f;
 
     @Nullable
     private ServerPlayer attachedPlayer = null;
@@ -38,7 +41,7 @@ public class MimicEntity extends FakePlayerWrapperEntity {
     @Nullable
     public Player getAttachedPlayer() {
         Optional<UUID> uuid = this.entityData.get(DATA_ATTACHED_PLAYER);
-        if(uuid.isPresent()) {
+        if (uuid.isPresent()) {
             return level().getPlayerByUUID(uuid.get());
         }
 
@@ -51,7 +54,7 @@ public class MimicEntity extends FakePlayerWrapperEntity {
 
     @Override
     public void die(@NotNull DamageSource pDamageSource) {
-        if(fakePlayer == null) return;
+        if (fakePlayer == null) return;
         super.die(pDamageSource);
     }
 
@@ -59,7 +62,7 @@ public class MimicEntity extends FakePlayerWrapperEntity {
     public void tick() {
         super.tick();
 
-        if(level().isClientSide) {
+        if (level().isClientSide) {
             return;
         }
 
@@ -67,9 +70,43 @@ public class MimicEntity extends FakePlayerWrapperEntity {
                 this.position(), 20, 20, 20
         ));
 
-        if(nearest != attachedPlayer) {
+        if (nearest != attachedPlayer) {
             this.setAttachedPlayer(nearest);
             this.attachedPlayer = nearest;
         }
+    }
+
+    public float getRealHealth() {
+        return super.getHealth();
+    }
+
+    public float getRealMaxHealth() {
+        return super.getMaxHealth();
+    }
+
+    @Override
+    public float getHealth() {
+        return mimicHP;
+    }
+
+    public void setRealHealth(float pHealth) {
+        super.setHealth(pHealth);
+    }
+
+    @Override
+    public void setHealth(float pHealth) {
+        beforeHP = super.getHealth();
+        super.setHealth(pHealth);
+        afterHP = super.getHealth();
+        if (beforeHP > afterHP && (beforeHP - afterHP) / beforeHP >= 0.3) {
+            mimicHP -= 40;
+        }
+        super.setHealth(super.getMaxHealth());
+        beforeHP = 0.0F;
+        afterHP = 0.0F;
+    }
+
+    public static void setMimicHP(Float mimicHP) {
+        MimicEntity.mimicHP = mimicHP;
     }
 }
