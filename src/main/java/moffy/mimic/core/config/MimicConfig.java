@@ -5,6 +5,8 @@ import moffy.mimic.modules.MimicModuleProvider;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
+import java.util.Locale;
+
 public class MimicConfig {
 
     public static ForgeConfigSpec COMMON_SPEC;
@@ -23,6 +25,10 @@ public class MimicConfig {
         AddonModuleRegistry.INSTANCE.LoadModule(new MimicModuleProvider(context), module);
 
         MODULE_SPEC = module.build();
+    }
+
+    public static String getConfigName(String modId, String suffix) {
+        return String.format(Locale.ROOT, "%s-%s.toml", modId, suffix);
     }
 
     static {

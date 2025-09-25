@@ -11,7 +11,8 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 @Mod(Mimic.MODID)
 public class Mimic {
 
-    public static final String MODID = "mindmirroringcreature";
+    public static final String MODID = "mind_mirroring_creature";
+
     @SuppressWarnings("removal")
     public Mimic() {
         FMLJavaModLoadingContext context = FMLJavaModLoadingContext.get();
@@ -22,5 +23,6 @@ public class Mimic {
         MimicEntities.ENTITY_TYPES.register(modEventBus);
 
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, MimicConfig.COMMON_SPEC);
+        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, MimicConfig.MODULE_SPEC, MimicConfig.getConfigName(Mimic.MODID, "modules"));
     }
 }
