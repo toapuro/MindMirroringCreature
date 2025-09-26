@@ -20,7 +20,7 @@ import java.util.UUID;
 public class MimicEntity extends FakePlayerWrapperEntity {
 
     private static final EntityDataAccessor<Optional<UUID>> DATA_ATTACHED_PLAYER = SynchedEntityData.defineId(MimicEntity.class, EntityDataSerializers.OPTIONAL_UUID);
-    private float mimicHP = 444f;
+    private static final EntityDataAccessor<Float> DATA_MIMIC_HP = SynchedEntityData.defineId(MimicEntity.class, EntityDataSerializers.FLOAT);
 
     @Nullable
     private ServerPlayer attachedPlayer = null;
@@ -33,6 +33,7 @@ public class MimicEntity extends FakePlayerWrapperEntity {
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(DATA_ATTACHED_PLAYER, attachedPlayer == null ? Optional.empty() : Optional.of(attachedPlayer.getUUID()));
+        this.entityData.define(DATA_MIMIC_HP, 444f);
     }
 
     @SuppressWarnings("OptionalIsPresent")
@@ -84,7 +85,7 @@ public class MimicEntity extends FakePlayerWrapperEntity {
 
     @Override
     public float getHealth() {
-        return mimicHP;
+        return this.entityData.get(DATA_MIMIC_HP);
     }
 
     public void setRealHealth(float pHealth) {
@@ -97,12 +98,12 @@ public class MimicEntity extends FakePlayerWrapperEntity {
         super.setHealth(pHealth);
         float afterHP = super.getHealth();
         if (beforeHP > afterHP && (beforeHP - afterHP) / beforeHP >= 0.3) {
-            mimicHP -= 40;
+            this.setMimicHP(this.getHealth() - 40);
             super.setHealth(super.getMaxHealth());
         }
     }
 
     public void setMimicHP(Float pHealth) {
-        mimicHP = pHealth;
+        entityData.set(DATA_MIMIC_HP, pHealth);
     }
 }
