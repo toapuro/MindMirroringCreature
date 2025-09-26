@@ -14,18 +14,4 @@ public class MimicEntityEvents {
                 MimicNakedRenderer::new
         );
     }
-
-    public static void onLivingHurt(LivingHurtEvent event){
-        if(event.getEntity().level().isClientSide()){
-            return;
-        }
-        if(event.getEntity() instanceof MimicEntity mimic){
-            float damage = event.getAmount();
-            float health = mimic.getRealHealth();
-            if(damage/health>=0.3) {
-                mimic.setMimicHP(mimic.getHealth()-40);
-                mimic.setRealHealth(mimic.getRealMaxHealth());
-            }
-        }
-    }
 }

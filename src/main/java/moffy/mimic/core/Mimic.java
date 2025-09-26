@@ -25,7 +25,6 @@ public class Mimic {
         MimicEntities.ENTITY_TYPES.register(modEventBus);
 
         modEventBus.addListener(MimicEntityEvents::registerRenderers);
-        modEventBus.addListener(MimicEntityEvents::onLivingHurt);
 
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, MimicConfig.COMMON_SPEC);
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, MimicConfig.MODULE_SPEC, MimicConfig.getConfigName(Mimic.MODID, "modules"));
