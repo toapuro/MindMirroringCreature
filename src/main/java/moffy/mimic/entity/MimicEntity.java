@@ -20,9 +20,9 @@ import java.util.UUID;
 public class MimicEntity extends FakePlayerWrapperEntity {
 
     private static final EntityDataAccessor<Optional<UUID>> DATA_ATTACHED_PLAYER = SynchedEntityData.defineId(MimicEntity.class, EntityDataSerializers.OPTIONAL_UUID);
-    private static float mimicHP = 444f;
-    private static float beforeHP = 0f;
-    private static float afterHP = 0f;
+    private float mimicHP = 444f;
+    private float beforeHP = 0f;
+    private float afterHP = 0f;
 
     @Nullable
     private ServerPlayer attachedPlayer = null;
@@ -106,7 +106,7 @@ public class MimicEntity extends FakePlayerWrapperEntity {
         afterHP = 0.0F;
     }
 
-    public static void setMimicHP(Float mimicHP) {
-        MimicEntity.mimicHP = mimicHP;
+    public void setMimicHP(Float pHealth) {
+        mimicHP = pHealth;
     }
 }
