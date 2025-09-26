@@ -21,8 +21,6 @@ public class MimicEntity extends FakePlayerWrapperEntity {
 
     private static final EntityDataAccessor<Optional<UUID>> DATA_ATTACHED_PLAYER = SynchedEntityData.defineId(MimicEntity.class, EntityDataSerializers.OPTIONAL_UUID);
     private float mimicHP = 444f;
-    private float beforeHP = 0f;
-    private float afterHP = 0f;
 
     @Nullable
     private ServerPlayer attachedPlayer = null;
@@ -95,9 +93,9 @@ public class MimicEntity extends FakePlayerWrapperEntity {
 
     @Override
     public void setHealth(float pHealth) {
-        beforeHP = super.getHealth();
+        float beforeHP = super.getHealth();
         super.setHealth(pHealth);
-        afterHP = super.getHealth();
+        float afterHP = super.getHealth();
         if (beforeHP > afterHP && (beforeHP - afterHP) / beforeHP >= 0.3) {
             mimicHP -= 40;
         }
