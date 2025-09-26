@@ -1,6 +1,8 @@
 package moffy.mimic.entity;
 
+import moffy.mimic.core.Mimic;
 import moffy.mimic.entity.fakeplayer.FakePlayerWrapperEntity;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -21,6 +23,9 @@ public class MimicEntity extends FakePlayerWrapperEntity {
 
     private static final EntityDataAccessor<Optional<UUID>> DATA_ATTACHED_PLAYER = SynchedEntityData.defineId(MimicEntity.class, EntityDataSerializers.OPTIONAL_UUID);
     private static final EntityDataAccessor<Float> DATA_MIMIC_HP = SynchedEntityData.defineId(MimicEntity.class, EntityDataSerializers.FLOAT);
+
+    @Nullable
+    private ServerPlayer player = null;
 
     @Nullable
     private ServerPlayer attachedPlayer = null;
@@ -68,7 +73,7 @@ public class MimicEntity extends FakePlayerWrapperEntity {
         ServerPlayer nearest = level().getNearestEntity(ServerPlayer.class, TargetingConditions.forNonCombat(), this, getX(), getY(), getZ(), AABB.ofSize(
                 this.position(), 20, 20, 20
         ));
-
+        this.player=nearest;
         if (nearest != attachedPlayer) {
             this.setAttachedPlayer(nearest);
             this.attachedPlayer = nearest;
@@ -94,16 +99,19 @@ public class MimicEntity extends FakePlayerWrapperEntity {
 
     @Override
     public void setHealth(float pHealth) {
-        float beforeHP = super.getHealth();
+        float beforeHP = super.getMaxHealth();
         super.setHealth(pHealth);
         float afterHP = super.getHealth();
-        if (beforeHP > afterHP && (beforeHP - afterHP) / beforeHP >= 0.3) {
+        if(player!=null){
+            player.sendSystemMessage(Component.nullToEmpty("%s %s".formatted(String.valueOf(beforeHP), String.valueOf(afterHP))));
+        }
+        if (afterHP / beforeHP <= 0.7) {
             this.setMimicHP(this.getHealth() - 40);
             super.setHealth(super.getMaxHealth());
         }
     }
 
     public void setMimicHP(Float pHealth) {
-        entityData.set(DATA_MIMIC_HP, pHealth);
+        this.entityData.set(DATA_MIMIC_HP, pHealth);
     }
 }
