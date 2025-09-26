@@ -100,8 +100,6 @@ public class MimicEntity extends FakePlayerWrapperEntity {
             mimicHP -= 40;
         }
         super.setHealth(super.getMaxHealth());
-        beforeHP = 0.0F;
-        afterHP = 0.0F;
     }
 
     public void setMimicHP(Float pHealth) {
