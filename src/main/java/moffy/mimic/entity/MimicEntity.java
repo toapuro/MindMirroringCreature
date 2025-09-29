@@ -100,7 +100,7 @@ public class MimicEntity extends FakePlayerWrapperEntity {
     @Override
     public void setHealth(float pHealth) {
         float beforeHP = super.getMaxHealth();
-        super.setHealth(pHealth);
+        super.setHealth(super.getHealth() + (pHealth - getHealth()));
         float afterHP = super.getHealth();
         if(player!=null){
             player.sendSystemMessage(Component.nullToEmpty("%s %s".formatted(String.valueOf(beforeHP), String.valueOf(afterHP))));
